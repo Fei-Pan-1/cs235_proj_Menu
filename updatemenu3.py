@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 import csv
 
-df = pd.DataFrame(columns=['trail_no', 'sequence', 'start_time', 'end_time', 'reaction_time(s)', 'error'])
+df = pd.DataFrame(columns=['trail_no', 'predict', 'onset', 'sequence', 'start_time', 'end_time', 'reaction_time(s)', 'error'])
 
 window = tk.Tk()
 window.title("cs235 project")
@@ -17,9 +17,9 @@ PRE_CLICK_TIME = datetime.now()
 ## TODO: update trail number when click button 'trail#'
 TRAIL_NO = 1
 error = 0
-predict = False
+predict = True
 # onset (0, 0.25. 0.5)
-delay = 2
+delay = 0
 
 
 # create menu bar
@@ -35,7 +35,7 @@ lst2 = ["Enchiladas", "Stack Tacos", "Chicken Stew", "Bean Rice", "CheeseBurger"
 lst3 = ["Horchata", "Margarita ", "Agua Frasca", "Tequila", "Beer", "Scotch", "Hawaiian Punch", "Coke", "Lassi",
         "Buttermilk", "Masala Soda/carbonated water ", "Tea", "Green Tea", "Matcha", "Bubble Tea", "Cassia wine"]
 
-
+lst1_to_lst2 = [[0,3,6]]
 ## TODO: need to be fixed
 def generateSequence():
     str = ''
@@ -57,17 +57,26 @@ def getSequence():
 def swapThreeItem(i, j, k, n, lst):
     if not predict:
         return
-    lst[0], lst[k] = lst[k], lst[0]
+    print(i, j, k)
+    lst[0], lst[i] = lst[i], lst[0]
     lst[1], lst[j] = lst[j], lst[1]
-    lst[2], lst[i] = lst[i], lst[2]
+    lst[2], lst[k] = lst[k], lst[2]
+    print(lst)
+    # lst[0], lst[k] = lst[k], lst[0]
+    # lst[1], lst[j] = lst[j], lst[1]
+    # lst[2], lst[i] = lst[i], lst[2]
 
 
 def swapTwoItem(i, j, n, lst):
+    if not predict:
+        return
     lst[0], lst[i] = lst[j], lst[0]
     lst[1], lst[j] = lst[j], lst[1]
 
 
 def swapFourItem(i, j, k, m, n, lst):
+    if not predict:
+        return
     lst[0], lst[k] = lst[k], lst[0]
     lst[1], lst[j] = lst[j], lst[1]
     lst[2], lst[i] = lst[i], lst[2]
@@ -97,7 +106,7 @@ def left_click1(n):
     reaction_time = diff.seconds + diff.microseconds / 1000000
 
     # add data to df
-    df = df.append(pd.Series([TRAIL_NO, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
+    df = df.append(pd.Series([TRAIL_NO, predict, delay, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
                    ignore_index=True)
     pd.set_option('max_columns', None)
     print(df)
@@ -178,7 +187,7 @@ def left_click2(n, lst2):
     reaction_time = diff.seconds + diff.microseconds / 1000000
 
     # add data to df
-    df = df.append(pd.Series([TRAIL_NO, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
+    df = df.append(pd.Series([TRAIL_NO, predict, delay, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
                    ignore_index=True)
     pd.set_option('max_columns', None)
     print(df)
@@ -259,12 +268,31 @@ def left_click3(n, lst3):
     reaction_time = diff.seconds + diff.microseconds / 1000000
 
     # add data to df
-    df = df.append(pd.Series([TRAIL_NO, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
+    df = df.append(pd.Series([TRAIL_NO, predict, delay, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
                    ignore_index=True)
     pd.set_option('max_columns', None)
     print(df)
     PRE_CLICK_TIME = click_time
     error = 0
+
+    clearmenu(menu1)
+    addMenu1(lst1)
+
+
+def addMenu1(lst1):
+    # Add menu1
+    # time.sleep(delay)
+    # for i in range(len(lst1)):
+    #     menu1.add_command(label=lst1[i], command=lambda idx=i: left_click1(idx, lst1))
+    #     if (i + 1) % 4 == 0:
+    #         menu1.add_separator()
+    # print("menu 1 opened")
+    time.sleep(delay)
+    for i in range(len(lst1)):
+        menu1.add_command(label=lst1[i], command=lambda idx=i: left_click1(idx))
+        if (i + 1) % 4 == 0:
+            menu1.add_separator()
+
 
 
 def addMenu2(lst2):
@@ -302,14 +330,18 @@ def clearmenu(menu):
 
 
 # Add menu1
+
+# menu1 = Menu(menuBar, tearoff=0)
+# time.sleep(delay)
+# menuBar.add_cascade(label='Menu1', menu=menu1)
+# time.sleep(delay)
+# for i in range(len(lst1)):
+#     menu1.add_command(label=lst1[i], command=lambda idx=i: left_click1(idx))
+#     if (i + 1) % 4 == 0:
+#         menu1.add_separator()
 menu1 = Menu(menuBar, tearoff=0)
-time.sleep(delay)
 menuBar.add_cascade(label='Menu1', menu=menu1)
-time.sleep(delay)
-for i in range(len(lst1)):
-    menu1.add_command(label=lst1[i], command=lambda idx=i: left_click1(idx))
-    if (i + 1) % 4 == 0:
-        menu1.add_separator()
+addMenu1(lst1)
 
 menu2 = Menu(menuBar, tearoff=0)
 clearmenu(menu2)
@@ -321,32 +353,44 @@ menuBar.add_cascade(label='Menu3', menu=menu3)
 str = '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n' + generateSequence()
 
 
-def openTrail():
+def openTrail(n):
     ## TODO: open predict static menu
-    global PRE_CLICK_TIME
+    global PRE_CLICK_TIME, TRAIL_NO, predict, delay
+    TRAIL_NO = n
+    if n > 3:
+        predict = False
+    else:
+        predict = True
+    if n % 3 == 1:
+        delay = 0
+    elif n % 3 == 2:
+        delay = 0.25
+    else:
+        delay = 0.5
     PRE_CLICK_TIME = datetime.now()
-    print("Start Trail 1")
+    # print("Start Trail " + str(n) + ":")
+    print(n)
     print(PRE_CLICK_TIME)
     return
 
 
 # Add buttons
-B1 = tk.Button(window, text="Trail 1", padx=10, pady=5, command=openTrail)
+B1 = tk.Button(window, text="Trail 1", padx=10, pady=5, command=lambda: openTrail(1))
 B1.grid(row=0, column=0)
 B1.pack()
-B2 = tk.Button(window, text="Trail 2", padx=10, pady=5, command=openTrail)
+B2 = tk.Button(window, text="Trail 2", padx=10, pady=5, command=lambda: openTrail(2))
 # B2['state'] = DISABLED
 B2.pack()
-B3 = tk.Button(window, text="Trail 3", padx=10, pady=5, command=openTrail)
+B3 = tk.Button(window, text="Trail 3", padx=10, pady=5, command=lambda: openTrail(3))
 # B3['state'] = DISABLED
 B3.pack()
-B4 = tk.Button(window, text="Trail 4", padx=10, pady=5, command=openTrail)
+B4 = tk.Button(window, text="Trail 4", padx=10, pady=5, command=lambda: openTrail(4))
 # B4['state'] = DISABLED
 B4.pack()
-B5 = tk.Button(window, text="Trail 5", padx=10, pady=5, command=openTrail)
+B5 = tk.Button(window, text="Trail 5", padx=10, pady=5, command=lambda: openTrail(5))
 # B5['state'] = DISABLED
 B5.pack()
-B6 = tk.Button(window, text="Trail 6", padx=10, pady=5, command=openTrail)
+B6 = tk.Button(window, text="Trail 6", padx=10, pady=5, command=lambda: openTrail(6))
 # B6['state'] = DISABLED
 B6.pack()
 
@@ -358,6 +402,6 @@ T = tk.Text(window, height=400, width=120)
 # T.place(x=0,y=10)
 T.pack()
 T.insert(tk.END, str)
-tk.mainloop()
+window.mainloop()
 
 # mainloop()
