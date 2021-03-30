@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 import csv
 
-df = pd.DataFrame(columns=['trail_no', 'sequence', 'error', 'start_time', 'end_time', 'reaction_time(s)'])
+df = pd.DataFrame(columns=['trail_no', 'sequence', 'start_time', 'end_time', 'reaction_time(s)', 'error'])
 
 window = tk.Tk()
 window.title("cs235 project")
@@ -17,11 +17,9 @@ PRE_CLICK_TIME = datetime.now()
 ## TODO: update trail number when click button 'trail#'
 TRAIL_NO = 1
 error = 0
-
-# def callback(menu):
-#     x = menu.entrycget(0, "label")
-#     print(x)
-#     print(time.strftime('%H:%M:%S'))
+predict = False
+# onset (0, 0.25. 0.5)
+delay = 2
 
 
 # create menu bar
@@ -38,6 +36,7 @@ lst3 = ["Horchata", "Margarita ", "Agua Frasca", "Tequila", "Beer", "Scotch", "H
         "Buttermilk", "Masala Soda/carbonated water ", "Tea", "Green Tea", "Matcha", "Bubble Tea", "Cassia wine"]
 
 
+## TODO: need to be fixed
 def generateSequence():
     str = ''
     for i in range(16):
@@ -50,7 +49,14 @@ def generateSequence():
     return str
 
 
+def getSequence():
+    ## TODO: get text from Label
+    text = ''
+    return text
+
 def swapThreeItem(i, j, k, n, lst):
+    if not predict:
+        return
     lst[0], lst[k] = lst[k], lst[0]
     lst[1], lst[j] = lst[j], lst[1]
     lst[2], lst[i] = lst[i], lst[2]
@@ -69,8 +75,7 @@ def swapFourItem(i, j, k, m, n, lst):
 
 
 def left_click1(n):
-    # x = menu.entrycget(n, "label")
-    # print(x)
+
     global PRE_CLICK_TIME, df, error
     lst = []
     item = "Menu1 -> " + lst1[n]
@@ -81,8 +86,6 @@ def left_click1(n):
     print(item)
     print(click_time)
     print(PRE_CLICK_TIME)
-    # print(time.strftime('%H:%M:%S'))
-    # error = 0
     if item != text:
         error += 1
         print('Choose Again. Wrong item clicked!')
@@ -94,7 +97,7 @@ def left_click1(n):
     reaction_time = diff.seconds + diff.microseconds / 1000000
 
     # add data to df
-    df = df.append(pd.Series([TRAIL_NO, text, error, PRE_CLICK_TIME, click_time, reaction_time], index=df.columns),
+    df = df.append(pd.Series([TRAIL_NO, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
                    ignore_index=True)
     pd.set_option('max_columns', None)
     print(df)
@@ -175,7 +178,7 @@ def left_click2(n, lst2):
     reaction_time = diff.seconds + diff.microseconds / 1000000
 
     # add data to df
-    df = df.append(pd.Series([TRAIL_NO, text, error, PRE_CLICK_TIME, click_time, reaction_time], index=df.columns),
+    df = df.append(pd.Series([TRAIL_NO, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
                    ignore_index=True)
     pd.set_option('max_columns', None)
     print(df)
@@ -256,7 +259,7 @@ def left_click3(n, lst3):
     reaction_time = diff.seconds + diff.microseconds / 1000000
 
     # add data to df
-    df = df.append(pd.Series([TRAIL_NO, text, error, PRE_CLICK_TIME, click_time, reaction_time], index=df.columns),
+    df = df.append(pd.Series([TRAIL_NO, text, PRE_CLICK_TIME, click_time, reaction_time, error], index=df.columns),
                    ignore_index=True)
     pd.set_option('max_columns', None)
     print(df)
@@ -266,6 +269,7 @@ def left_click3(n, lst3):
 
 def addMenu2(lst2):
     # Add menu2
+    time.sleep(delay)
     for i in range(len(lst2)):
         menu2.add_command(label=lst2[i], command=lambda idx=i: left_click2(idx, lst2))
         if (i + 1) % 4 == 0:
@@ -276,6 +280,7 @@ def addMenu2(lst2):
 
 def addMenu3(lst3):
     # Add menu3
+    time.sleep(delay)
     for i in range(len(lst3)):
         menu3.add_command(label=lst3[i], command=lambda idx=i: left_click3(idx, lst3))
         if (i + 1) % 4 == 0:
@@ -298,7 +303,9 @@ def clearmenu(menu):
 
 # Add menu1
 menu1 = Menu(menuBar, tearoff=0)
+time.sleep(delay)
 menuBar.add_cascade(label='Menu1', menu=menu1)
+time.sleep(delay)
 for i in range(len(lst1)):
     menu1.add_command(label=lst1[i], command=lambda idx=i: left_click1(idx))
     if (i + 1) % 4 == 0:
