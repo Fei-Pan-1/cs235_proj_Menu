@@ -16,7 +16,7 @@ window = tk.Tk()
 window.title("cs235 project")
 window.geometry("1180x500+50+0")
 
-## initial to time when click button 'trail#', then update everytime when correctly click item
+# initial time when click button 'trail#', then update everytime when correctly click item
 PRE_CLICK_TIME = datetime.now()
 TRAIL_NO = 1
 error = 0
@@ -69,7 +69,7 @@ def generateSequence():
             B5['state'] = DISABLED
             B6['state'] = NORMAL
         else:
-            df.to_csv('menu_data.csv', index=True, header=True)     # save to csv file
+            df.to_csv('menu_data.csv', index=True, header=True)  # save to csv file
             B6['state'] = DISABLED
             L1.config(text='Congratulations! You Finished All Trail!')
             L3.config(text='menu_data.csv File Exported!')
@@ -92,8 +92,7 @@ def generateSequence():
         x = lst2_to_lst3[current_item]
         print("lst2 to lst3 check:")
         print(x)
-        # i = random.choice(x)
-        i = 10
+        i = random.choice(x)
         current_sequence = "Menu3 -> " + lst3[i]
         print(current_sequence)
         current_item = i
