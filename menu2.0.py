@@ -49,7 +49,8 @@ lst2_to_lst3 = [[0, 1, 4], [1, 3, 7], [0, 2, 6], [2, 3, 14], [4, 7, 10], [4, 5, 
 def generateSequence():
     global N, current_sequence, current_item
     if N > maxN:
-        print('Trail end! Click next Trail!')
+        # print('Trail end! Click next Trail!')
+        print(df)
         L1.config(text='Trail ends! Click next Trail!')
         L2.config(text='')
         L3.config(text='')
@@ -82,16 +83,16 @@ def generateSequence():
         current_item = i
     elif N % 3 == 2:  # from Menu2
         x = lst1_to_lst2[current_item]
-        print("lst1 to lst2 check:")
-        print(x)
+        # print("lst1 to lst2 check:")
+        # print(x)
         i = random.choice(x)
         current_sequence = "Menu2 -> " + lst2[i]
         print(current_sequence)
         current_item = i
     else:
         x = lst2_to_lst3[current_item]
-        print("lst2 to lst3 check:")
-        print(x)
+        # print("lst2 to lst3 check:")
+        # print(x)
         i = random.choice(x)
         current_sequence = "Menu3 -> " + lst3[i]
         print(current_sequence)
@@ -149,12 +150,12 @@ def left_click1(n):
     global PRE_CLICK_TIME, df, error, N
     item = "Menu1 -> " + lst1[n]
     click_time = datetime.now()
-    print(item)
-    print(click_time)
-    print(PRE_CLICK_TIME)
+    # print(item)
+    # print(click_time)
+    # print(PRE_CLICK_TIME)
     if item != current_sequence:
         error += 1
-        print('Choose Again. Wrong item clicked!')
+        # print('Choose Again. Wrong item clicked!')
         L3.config(text='X', fg='red')
         return
 
@@ -170,7 +171,7 @@ def left_click1(n):
                   index=df.columns),
         ignore_index=True)
     pd.set_option('max_columns', None)
-    print(df)
+    # print(df)
     PRE_CLICK_TIME = click_time
     error = 0
     N += 1
@@ -217,12 +218,12 @@ def left_click2(menu_item_name):
     global PRE_CLICK_TIME, df, error, N
     item = "Menu2 -> " + menu_item_name
     click_time = datetime.now()
-    print(item)
-    print(click_time)
-    print(PRE_CLICK_TIME)
+    # print(item)
+    # print(click_time)
+    # print(PRE_CLICK_TIME)
     if item != current_sequence:
         error += 1
-        print('Choose Again. Wrong item clicked! ')
+        # print('Choose Again. Wrong item clicked! ')
         L3.config(text='X', fg='red')
         return
 
@@ -238,7 +239,7 @@ def left_click2(menu_item_name):
                   index=df.columns),
         ignore_index=True)
     pd.set_option('max_columns', None)
-    print(df)
+    # print(df)
     PRE_CLICK_TIME = click_time
     error = 0
     N += 1
@@ -286,12 +287,12 @@ def left_click3(menu_item_name):
     lst = []
     item = "Menu3 -> " + menu_item_name
     click_time = datetime.now()
-    print(item)
-    print(click_time)
-    print(PRE_CLICK_TIME)
+    # print(item)
+    # print(click_time)
+    # print(PRE_CLICK_TIME)
     if item != current_sequence:
         error += 1
-        print('Choose Again. Wrong item clicked!')
+        # print('Choose Again. Wrong item clicked!')
         L3.config(text='X', fg='red')
         return
 
@@ -307,7 +308,7 @@ def left_click3(menu_item_name):
                   index=df.columns),
         ignore_index=True)
     pd.set_option('max_columns', None)
-    print(df)
+    # print(df)
     PRE_CLICK_TIME = click_time
     error = 0
     N += 1
@@ -331,8 +332,8 @@ def addMenu2(lst):
         menu2.add_command(label=lst[i], command=lambda menu_item_name=lst[i]: left_click2(menu_item_name))
         if (i + 1) % 4 == 0:
             menu2.add_separator()
-    print("current menu2 is:\n")
-    print(lst)
+    # print("current menu2 is:\n")
+    # print(lst)
 
 
 def addMenu3(lst):
@@ -341,8 +342,8 @@ def addMenu3(lst):
         menu3.add_command(label=lst[i], command=lambda menu_item_name=lst[i]: left_click3(menu_item_name))
         if (i + 1) % 4 == 0:
             menu3.add_separator()
-    print("current menu3 is:\n")
-    print(lst)
+    # print("current menu3 is:\n")
+    # print(lst)
 
 
 def clearmenu(menu):
@@ -380,8 +381,8 @@ def openTrail(n):
     else:
         delay = 0.5
     PRE_CLICK_TIME = datetime.now()
-    print(n)
-    print(PRE_CLICK_TIME)
+    # print(n)
+    # print(PRE_CLICK_TIME)
     return
 
 
