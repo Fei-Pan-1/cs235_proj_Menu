@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import *
 import time
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import pandas as pd
 import csv
 import random
