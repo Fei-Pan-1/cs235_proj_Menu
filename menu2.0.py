@@ -10,15 +10,15 @@ from random import randrange
 from tkinter import filedialog
 
 df = pd.DataFrame(
-    columns=['trail_no', 'predict', 'onset(s)', 'sequence', 'start_time', 'end_time', 'reaction_time(s)', 'error'])
+    columns=['trial_no', 'predict', 'onset(s)', 'sequence', 'start_time', 'end_time', 'reaction_time(s)', 'error'])
 
 window = tk.Tk()
-window.title("cs235 project")
+window.title("Ephemeral Adaptive Menu (cs235 project)")
 window.geometry("1180x500+50+0")
 
-# initial time when click button 'trail#', then update everytime when correctly click item
+# initial time when click button 'trial#', then update everytime when correctly click item
 PRE_CLICK_TIME = datetime.now()
-TRAIL_NO = 1
+TRIAL_NO = 1
 error = 0
 predict = True
 delay = 0
@@ -49,30 +49,30 @@ lst2_to_lst3 = [[0, 1, 4], [1, 3, 7], [0, 2, 6], [2, 3, 14], [4, 7, 10], [4, 5, 
 def generateSequence():
     global N, current_sequence, current_item
     if N > maxN:
-        # print('Trail end! Click next Trail!')
+        # print('Trial end! Click next Trial!')
         print(df)
-        L1.config(text='Trail ends! Click next Trail!')
+        L1.config(text='Trial ends! Click next Trial!')
         L2.config(text='')
         L3.config(text='')
-        if TRAIL_NO == 1:
+        if TRIAL_NO == 1:
             B1['state'] = DISABLED
             B2['state'] = NORMAL
-        elif TRAIL_NO == 2:
+        elif TRIAL_NO == 2:
             B2['state'] = DISABLED
             B3['state'] = NORMAL
-        elif TRAIL_NO == 3:
+        elif TRIAL_NO == 3:
             B3['state'] = DISABLED
             B4['state'] = NORMAL
-        elif TRAIL_NO == 4:
+        elif TRIAL_NO == 4:
             B4['state'] = DISABLED
             B5['state'] = NORMAL
-        elif TRAIL_NO == 5:
+        elif TRIAL_NO == 5:
             B5['state'] = DISABLED
             B6['state'] = NORMAL
         else:
             df.to_csv('menu_data.csv', index=True, header=True)  # save to csv file
             B6['state'] = DISABLED
-            L1.config(text='Congratulations! You Finished All Trail!')
+            L1.config(text='Congratulations! You Finished All Trial!')
             L3.config(text='menu_data.csv File Exported!')
         N = 1
         return
@@ -167,7 +167,7 @@ def left_click1(n):
 
     # add data to df
     df = df.append(
-        pd.Series([TRAIL_NO, predict, delay, current_sequence, PRE_CLICK_TIME, click_time, reaction_time, error],
+        pd.Series([TRIAL_NO, predict, delay, current_sequence, PRE_CLICK_TIME, click_time, reaction_time, error],
                   index=df.columns),
         ignore_index=True)
     pd.set_option('max_columns', None)
@@ -235,7 +235,7 @@ def left_click2(menu_item_name):
 
     # add data to df
     df = df.append(
-        pd.Series([TRAIL_NO, predict, delay, current_sequence, PRE_CLICK_TIME, click_time, reaction_time, error],
+        pd.Series([TRIAL_NO, predict, delay, current_sequence, PRE_CLICK_TIME, click_time, reaction_time, error],
                   index=df.columns),
         ignore_index=True)
     pd.set_option('max_columns', None)
@@ -304,7 +304,7 @@ def left_click3(menu_item_name):
 
     # add data to df
     df = df.append(
-        pd.Series([TRAIL_NO, predict, delay, current_sequence, PRE_CLICK_TIME, click_time, reaction_time, error],
+        pd.Series([TRIAL_NO, predict, delay, current_sequence, PRE_CLICK_TIME, click_time, reaction_time, error],
                   index=df.columns),
         ignore_index=True)
     pd.set_option('max_columns', None)
@@ -364,11 +364,11 @@ clearmenu(menu3)
 menuBar.add_cascade(label='Menu3', menu=menu3)
 
 
-def openTrail(n):
-    global PRE_CLICK_TIME, TRAIL_NO, predict, delay
+def openTrial(n):
+    global PRE_CLICK_TIME, TRIAL_NO, predict, delay
     generateSequence()
     L1.config(text='Please Click Menu Item:')
-    TRAIL_NO = n
+    TRIAL_NO = n
 
     if n > 3:
         predict = False
@@ -389,7 +389,7 @@ def openTrail(n):
 # display Menu
 window.config(menu=menuBar)
 
-L1 = Label(window, text="Please Choose A Trail: ",
+L1 = Label(window, text="Please Choose A Trial: ",
            fg="red",
            font="Times 14")
 L1.place(x=40, y=400)
@@ -408,21 +408,21 @@ L2.pack()
 L3.pack()
 
 # Add buttons
-B1 = tk.Button(window, text="Trail 1", padx=10, pady=5, command=lambda: openTrail(1))
+B1 = tk.Button(window, text="Trial 1", padx=10, pady=5, command=lambda: openTrial(1))
 B1.pack()
-B2 = tk.Button(window, text="Trail 2", padx=10, pady=5, command=lambda: openTrail(2))
+B2 = tk.Button(window, text="Trial 2", padx=10, pady=5, command=lambda: openTrial(2))
 B2['state'] = DISABLED
 B2.pack()
-B3 = tk.Button(window, text="Trail 3", padx=10, pady=5, command=lambda: openTrail(3))
+B3 = tk.Button(window, text="Trial 3", padx=10, pady=5, command=lambda: openTrial(3))
 B3['state'] = DISABLED
 B3.pack()
-B4 = tk.Button(window, text="Trail 4", padx=10, pady=5, command=lambda: openTrail(4))
+B4 = tk.Button(window, text="Trial 4", padx=10, pady=5, command=lambda: openTrial(4))
 B4['state'] = DISABLED
 B4.pack()
-B5 = tk.Button(window, text="Trail 5", padx=10, pady=5, command=lambda: openTrail(5))
+B5 = tk.Button(window, text="Trial 5", padx=10, pady=5, command=lambda: openTrial(5))
 B5['state'] = DISABLED
 B5.pack()
-B6 = tk.Button(window, text="Trail 6", padx=10, pady=5, command=lambda: openTrail(6))
+B6 = tk.Button(window, text="Trial 6", padx=10, pady=5, command=lambda: openTrial(6))
 B6['state'] = DISABLED
 B6.pack()
 
